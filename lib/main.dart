@@ -20,7 +20,7 @@ class MyHome extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           brightness: Brightness.light,
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(color: Colors.pinkAccent),
           elevation: 0.0,
           backgroundColor: Colors.white70,
         ),
@@ -38,7 +38,7 @@ class MyHome extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: Text('Add Transaction', style: TextStyle(fontSize: 20.0),),
+                title: Text('Add Expense', style: TextStyle(fontSize: 20.0),),
                 trailing: Icon(Icons.add_circle_outline),
                 onTap: () {
                   Navigator.push(
@@ -51,7 +51,7 @@ class MyHome extends StatelessWidget {
               ),
               Divider(),
               ListTile(
-                title: Text('History', style: TextStyle(fontSize: 20.0),),
+                title: Text('View Expenses', style: TextStyle(fontSize: 20.0),),
                 trailing: Icon(Icons.query_builder),
                 onTap: () {
                   Navigator.push(
@@ -94,51 +94,51 @@ class MyHome extends StatelessWidget {
                 SizedBox(
                   height: 25.0,
                 ),
-                Card(
-                  margin:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      ListTile(
-                        title: Center(
-                          child: Text(
-                            'App that will help you instantly \n \t \t \t \t record your expenses',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: 'Muli',
-                            ),
-                          ),
-                        ),
-                      ),
-                      MaterialButton(
-                        color: Colors.pinkAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        padding: EdgeInsets.only(left: 50.0, right: 50.0),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddTransaction(),
-                              ));
-                        },
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    ListTile(
+                      title: Center(
                         child: Text(
-                          'ADD NOW',
+                          'App that will help you instantly \n \t \t \t \t record your expenses',
                           style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white,
+                            fontSize: 25.0,
+                            fontFamily: 'Muli',
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 30.0,
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    MaterialButton(
+                      color: Colors.pinkAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ],
-                  ),
+                      padding: EdgeInsets.only(left: 50.0, right: 50.0),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddTransaction(),
+                            ));
+                      },
+                      child: Text(
+                        'ADD NOW',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                  ],
                 ),
               ],
             ),
