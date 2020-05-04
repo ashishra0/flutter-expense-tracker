@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'error.dart';
+
 
 class GetItems extends StatefulWidget {
   @override
@@ -11,15 +14,34 @@ class GetItems extends StatefulWidget {
 }
 
 class _GetItemsState extends State<GetItems> {
+  ProgressDialog progressDialog;
   Map data;
   List itemData;
+  var icon = Icons.refresh;
 
   Future getItems() async {
-    var response = await http.get('http://localhost:5000/v1/expense');
-    data = json.decode(response.body);
-    setState(() {
-      itemData = data['data']['Expense'];
-    });
+    try {
+      var response = await http.get('http://localhost:5000/v1/expense');
+      data = json.decode(response.body);
+      setState(() {
+        itemData = data['data']['Expense'];
+      });
+      progressDialog.update(
+        message: 'List updated!',
+        messageTextStyle: TextStyle(
+          fontSize: 20.0,
+        ),
+      );
+    } catch (err) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ErrorPage(),
+        ),
+      );
+    }
+    await progressDialog.show();
+    await progressDialog.hide();
   }
 
   convertToAmount(int cost) {
@@ -42,10 +64,15 @@ class _GetItemsState extends State<GetItems> {
   }
 
   Widget build(BuildContext context) {
+    progressDialog = ProgressDialog(
+      context,
+      isDismissible: true,
+    );
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
+          brightness: Brightness.light,
           backgroundColor: Colors.white70,
           automaticallyImplyLeading: true,
           title: Text(
@@ -57,6 +84,16 @@ class _GetItemsState extends State<GetItems> {
               fontFamily: 'Muli',
             ),
           ),
+          actions: <Widget>[
+            // action button
+            IconButton(
+              icon: Icon(icon),
+              color: Colors.black87,
+              onPressed: () {
+                getItems();
+              },
+            ),
+          ],
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.pop(context, false),
