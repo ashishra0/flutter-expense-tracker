@@ -10,7 +10,7 @@ class AddTransaction extends StatefulWidget {
 
 class _AddTransactionState extends State<AddTransaction> {
   ProgressDialog progressDialog;
-  var url = 'https://alfred-expense-beta.herokuapp.com/v1/graphql';
+  var url = 'https://bifrost-beta.herokuapp.com/v1/expense/create';
   var response;
   String itemName;
   int itemCost;
