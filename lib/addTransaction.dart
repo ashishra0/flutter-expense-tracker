@@ -10,7 +10,7 @@ class AddTransaction extends StatefulWidget {
 
 class _AddTransactionState extends State<AddTransaction> {
   ProgressDialog progressDialog;
-  var url = 'http://localhost:5000/v1/expense/create';
+  var url = 'https://alfred-expense-beta.herokuapp.com/v1/graphql';
   var response;
   String itemName;
   int itemCost;
@@ -29,6 +29,14 @@ class _AddTransactionState extends State<AddTransaction> {
         title: "Hooray!",
         desc: "Item saved successfully",
         buttons: [
+          DialogButton(
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
         ],
       ).show();
     } else if (value == "400") {
@@ -38,6 +46,15 @@ class _AddTransactionState extends State<AddTransaction> {
         title: "Oh no!",
         desc: "Unable to save item, please try again later!",
         buttons: [
+          DialogButton(
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            color: Colors.red,
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
         ],
       ).show();
     }

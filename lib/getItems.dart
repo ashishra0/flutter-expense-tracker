@@ -21,7 +21,7 @@ class _GetItemsState extends State<GetItems> {
 
   Future getItems() async {
     try {
-      var response = await http.get('http://localhost:5000/v1/expense');
+      var response = await http.get('https://alfred-expense-beta.herokuapp.com/v1/graphql');
       data = json.decode(response.body);
       setState(() {
         itemData = data['data']['Expense'];
