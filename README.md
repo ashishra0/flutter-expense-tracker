@@ -2,4 +2,7 @@
 
 ---
 
-# alfredexpensetracker
+# Daily Expense Tracker
+
+---
+### Powered by [Bifrost](https://github.com/ashishra0/bifrost)
