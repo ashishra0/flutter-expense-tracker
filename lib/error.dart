@@ -24,15 +24,15 @@ class DisplayErrorPage extends StatelessWidget {
                   'Oops! Looks like we',
                   style: TextStyle(
                     color: Colors.black87,
-                    fontSize: 40.0,
+                    fontSize: 35.0,
                   ),
                 ),
                 Text(
                   'Messed Up!',
                   style: TextStyle(
-                    color: Colors.redAccent,
+                    color: Colors.red,
                     fontWeight: FontWeight.bold,
-                    fontSize: 40.0,
+                    fontSize: 35.0,
                   ),
                 ),
                 SizedBox(
@@ -40,7 +40,7 @@ class DisplayErrorPage extends StatelessWidget {
                 ),
                 Image(
                     image: AssetImage('images/bermuda-page-not-found.png'),
-                    height: 250.0),
+                    height: 230.0),
                 SizedBox(
                   height: 25.0,
                 ),
