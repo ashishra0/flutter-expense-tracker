@@ -1,7 +1,7 @@
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AddTransaction extends StatefulWidget {
   @override
@@ -20,24 +20,38 @@ class _AddTransactionState extends State<AddTransaction> {
   final _formKey = GlobalKey<FormState>();
   var error;
 
+
+  displayAlert(value) {
+    if (value == "200") {
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "Hooray!",
+        desc: "Item saved successfully",
+        buttons: [
+        ],
+      ).show();
+    } else if (value == "400") {
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Oh no!",
+        desc: "Unable to save item, please try again later!",
+        buttons: [
+        ],
+      ).show();
+    }
+  }
+
   _sendData(name, cost) async {
     try {
       response = await http.post(url,
           body: '{"item_name": "$name", "item_cost": $cost}', headers: headers);
-      progressDialog.update(
-        message: 'Good to go!',
-        messageTextStyle: TextStyle(
-          fontSize: 20.0,
-        ),
-      );
+      displayAlert("200");
     } catch (err) {
       error = err;
-      progressDialog.update(
-        message: 'Something went wrong. Try again!',
-        messageTextStyle: TextStyle(color: Colors.deepOrange, fontSize: 20.0),
-      );
+      displayAlert("400");
     }
-    await progressDialog.show();
     _formKey.currentState.reset();
   }
 
@@ -60,81 +74,83 @@ class _AddTransactionState extends State<AddTransaction> {
             color: Colors.pinkAccent,
           ),
         ),
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 30.0,
-                ),
-                Text(
-                  'Add your',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 40.0,
+        body: SingleChildScrollView(
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 10.0,
                   ),
-                ),
-                Text(
-                  'Expense',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40.0,
-                  ),
-                ),
-                Image(
-                  image: AssetImage('images/payment-processed.png'),
-                  height: 250.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-                  child: TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter item',
+                  Text(
+                    'Add your',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 35.0,
                     ),
                   ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20.0, left: 40.0, right: 40.0),
-                  child: TextFormField(
-                    controller: priceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Enter amount',
+                  Text(
+                    'Expense',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 35.0,
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: MaterialButton(
-                    color: Colors.pinkAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    padding: EdgeInsets.only(left: 50.0, right: 50.0),
-                    onPressed: () {
-                      _sendData(nameController.text, priceController.text);
-                    },
-                    child: Text(
-                      'SAVE',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white,
+                  Image(
+                    image: AssetImage('images/payment-processed.png'),
+                    height: 220.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+                    child: TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Enter item',
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 10.0, left: 40.0, right: 40.0),
+                    child: TextFormField(
+                      controller: priceController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Enter amount',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: MaterialButton(
+                      color: Colors.pinkAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      padding: EdgeInsets.only(left: 50.0, right: 50.0),
+                      onPressed: () {
+                        _sendData(nameController.text, priceController.text);
+                      },
+                      child: Text(
+                        'SAVE',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
