@@ -18,6 +18,7 @@ class MyHome extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           brightness: Brightness.light,
           iconTheme: IconThemeData(color: Colors.pinkAccent),
@@ -38,7 +39,10 @@ class MyHome extends StatelessWidget {
                 ),
               ),
               ListTile(
-                title: Text('Add Expense', style: TextStyle(fontSize: 20.0),),
+                title: Text(
+                  'Add Expense',
+                  style: TextStyle(fontSize: 20.0),
+                ),
                 trailing: Icon(Icons.add_circle_outline),
                 onTap: () {
                   Navigator.push(
@@ -51,7 +55,10 @@ class MyHome extends StatelessWidget {
               ),
               Divider(),
               ListTile(
-                title: Text('View Expenses', style: TextStyle(fontSize: 20.0),),
+                title: Text(
+                  'View Expenses',
+                  style: TextStyle(fontSize: 20.0),
+                ),
                 trailing: Icon(Icons.query_builder),
                 onTap: () {
                   Navigator.push(
@@ -90,29 +97,38 @@ class MyHome extends StatelessWidget {
                 ),
                 Image(
                     image: AssetImage('images/open-doodles-selfie.png'),
-                    height: 250.0),
+                    height: 200.0),
                 SizedBox(
                   height: 25.0,
                 ),
                 Column(
                   children: <Widget>[
-                    SizedBox(
-                      height: 30.0,
-                    ),
                     ListTile(
                       title: Center(
-                        child: Text(
-                          'App that will help you instantly \n \t \t \t \t record your expenses',
-                          style: TextStyle(
-                            fontSize: 25.0,
-                            fontFamily: 'Muli',
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'App that will help you instantly',
+                              style: TextStyle(
+                                fontSize: 22.0,
+                                fontFamily: 'Muli',
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'record your expenses',
+                              style: TextStyle(
+                                fontFamily: 'Muli',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 15.0,
+                      height: 10.0,
                     ),
                     MaterialButton(
                       color: Colors.pinkAccent,
