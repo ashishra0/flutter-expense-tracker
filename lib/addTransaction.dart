@@ -20,7 +20,6 @@ class _AddTransactionState extends State<AddTransaction> {
   final _formKey = GlobalKey<FormState>();
   var error;
 
-
   displayAlert(value) {
     if (value == "200") {
       Alert(
@@ -122,7 +121,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   ),
                   Image(
                     image: AssetImage('images/payment-processed.png'),
-                    height: 220.0,
+                    height: 200.0,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 40.0, right: 40.0),

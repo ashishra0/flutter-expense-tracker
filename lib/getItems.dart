@@ -75,13 +75,15 @@ class _GetItemsState extends State<GetItems> {
           brightness: Brightness.light,
           backgroundColor: Colors.white70,
           automaticallyImplyLeading: true,
-          title: Text(
-            'History',
-            style: TextStyle(
-              color: Colors.black87,
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Muli',
+          title: Center(
+            child: Text(
+              'History',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 25.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Muli',
+              ),
             ),
           ),
           actions: <Widget>[
@@ -107,7 +109,7 @@ class _GetItemsState extends State<GetItems> {
             itemBuilder: (BuildContext context, int index) {
               return Center(
                 child: Card(
-                  margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+                  margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -120,12 +122,12 @@ class _GetItemsState extends State<GetItems> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 6.0),
+                        SizedBox(height: 5.0),
                         Text(
                           "#${itemData[index]['item_id']}",
                           style: TextStyle(fontSize: 13.0, color: Colors.grey),
                         ),
-                        SizedBox(height: 6.0),
+                        SizedBox(height: 5.0),
                         Text(
                           "${convertToAmount(itemData[index]['item_cost'])} • ${parseDate(itemData[index]['date'])}",
                           style: TextStyle(fontSize: 15.0),
