@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -10,7 +9,6 @@ class AddTransaction extends StatefulWidget {
 
 class _AddTransactionState extends State<AddTransaction> {
   ProgressDialog progressDialog;
-  var url = 'https://bifrost-beta.herokuapp.com/v1/expense/create';
   var response;
   String itemName;
   int itemCost;
@@ -57,18 +55,6 @@ class _AddTransactionState extends State<AddTransaction> {
         ],
       ).show();
     }
-  }
-
-  _sendData(name, cost) async {
-    try {
-      response = await http.post(url,
-          body: '{"item_name": "$name", "item_cost": $cost}', headers: headers);
-      displayAlert("200");
-    } catch (err) {
-      error = err;
-      displayAlert("400");
-    }
-    _formKey.currentState.reset();
   }
 
   @override
@@ -154,7 +140,7 @@ class _AddTransactionState extends State<AddTransaction> {
                       ),
                       padding: EdgeInsets.only(left: 50.0, right: 50.0),
                       onPressed: () {
-                        _sendData(nameController.text, priceController.text);
+                        // todo: Add localstorage method
                       },
                       child: Text(
                         'SAVE',

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'error.dart';
 
 
 class GetItems extends StatefulWidget {
@@ -18,31 +14,6 @@ class _GetItemsState extends State<GetItems> {
   Map data;
   List itemData;
   var icon = Icons.refresh;
-
-  Future getItems() async {
-    try {
-      var response = await http.get('https://bifrost-beta.herokuapp.com/v1/expense');
-      data = json.decode(response.body);
-      setState(() {
-        itemData = data['data']['Expense'];
-      });
-      progressDialog.update(
-        message: 'List updated!',
-        messageTextStyle: TextStyle(
-          fontSize: 20.0,
-        ),
-      );
-    } catch (err) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ErrorPage(),
-        ),
-      );
-    }
-    await progressDialog.show();
-    await progressDialog.hide();
-  }
 
   convertToAmount(int cost) {
     return new FlutterMoneyFormatter(
@@ -60,7 +31,7 @@ class _GetItemsState extends State<GetItems> {
   @override
   void initState() {
     super.initState();
-    getItems();
+    // Todo: add localstorage method
   }
 
   Widget build(BuildContext context) {
@@ -92,7 +63,7 @@ class _GetItemsState extends State<GetItems> {
               icon: Icon(icon),
               color: Colors.black87,
               onPressed: () {
-                getItems();
+                // Todo: Add localstorage method
               },
             ),
           ],
@@ -142,22 +113,5 @@ class _GetItemsState extends State<GetItems> {
         ),
       ),
     );
-  }
-}
-
-class Item {
-  final int item_id;
-  final String item_name;
-  final int item_cost;
-  final String date;
-
-  Item({this.item_id, this.item_name, this.item_cost, this.date});
-
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
-        item_id: json['item_id'],
-        item_name: json['item_name'],
-        item_cost: json['item_cost'],
-        date: json['date']);
   }
 }
