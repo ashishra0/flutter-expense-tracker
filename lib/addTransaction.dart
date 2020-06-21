@@ -1,3 +1,5 @@
+import 'package:alfredexpensetracker/databasehelper.dart';
+import 'package:alfredexpensetracker/item.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -120,8 +122,8 @@ class _AddTransactionState extends State<AddTransaction> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10.0, left: 40.0, right: 40.0),
+                    padding: const EdgeInsets.only(
+                        top: 10.0, left: 40.0, right: 40.0),
                     child: TextFormField(
                       controller: priceController,
                       keyboardType: TextInputType.number,
@@ -139,8 +141,11 @@ class _AddTransactionState extends State<AddTransaction> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       padding: EdgeInsets.only(left: 50.0, right: 50.0),
-                      onPressed: () {
-                        // todo: Add localstorage method
+                      onPressed: () async {
+                        await Item.insertItem(Item(
+                          name: nameController.text,
+                          cost: int.parse(priceController.text),
+                        ));
                       },
                       child: Text(
                         'SAVE',
