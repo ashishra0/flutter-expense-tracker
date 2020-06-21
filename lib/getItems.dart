@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
+import 'package:alfredexpensetracker/item.dart';
 
 class GetItems extends StatefulWidget {
   @override
@@ -28,10 +28,14 @@ class _GetItemsState extends State<GetItems> {
     return DateFormat.yMMMMd("en_US").format(myDate);
   }
 
+  getItemFromDb() async {
+    itemData = await Item.queryAll();
+  }
+
   @override
   void initState() {
     super.initState();
-    // Todo: add localstorage method
+    getItemFromDb();
   }
 
   Widget build(BuildContext context) {
@@ -63,7 +67,7 @@ class _GetItemsState extends State<GetItems> {
               icon: Icon(icon),
               color: Colors.black87,
               onPressed: () {
-                // Todo: Add localstorage method
+                getItemFromDb();
               },
             ),
           ],
@@ -87,7 +91,7 @@ class _GetItemsState extends State<GetItems> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Text(
-                          "${itemData[index]['item_name']}",
+                          "${itemData[index]['name']}",
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
@@ -100,7 +104,7 @@ class _GetItemsState extends State<GetItems> {
                         ),
                         SizedBox(height: 5.0),
                         Text(
-                          "${convertToAmount(itemData[index]['item_cost'])} • ${parseDate(itemData[index]['date'])}",
+                          "${convertToAmount(itemData[index]['cost'])}",
                           style: TextStyle(fontSize: 15.0),
                         ),
                       ],
