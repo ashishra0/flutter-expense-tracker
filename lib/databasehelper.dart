@@ -21,7 +21,8 @@ class DatabaseHelper {
   initializeDatabase() async {
     return await openDatabase(join(await getDatabasesPath(), databaseName),
         version: 1, onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE items(name TEXT, cost INTEGER)");
+      await db.execute("CREATE TABLE items(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, cost INTEGER)");
+      await db.close();
     });
   }
 }
