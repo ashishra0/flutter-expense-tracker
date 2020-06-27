@@ -13,14 +13,21 @@ class _AddTransactionState extends State<AddTransaction> {
   var response;
   String itemName;
   int itemCost;
-  final nameController = TextEditingController();
-  final priceController = TextEditingController();
-  Map<String, String> headers = {"Content-type": "application/json"};
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController priceController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var error;
 
+  saveToDB() async {
+    var result = await Item.insertItem(Item(
+      name: nameController.text,
+      cost: int.parse(priceController.text),
+    ));
+    displayAlert(result);
+  }
+
   displayAlert(value) {
-    if (value == "200") {
+    if (value != 0) {
       Alert(
         context: context,
         type: AlertType.success,
@@ -37,7 +44,7 @@ class _AddTransactionState extends State<AddTransaction> {
           )
         ],
       ).show();
-    } else if (value == "400") {
+    } else {
       Alert(
         context: context,
         type: AlertType.error,
@@ -140,12 +147,7 @@ class _AddTransactionState extends State<AddTransaction> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       padding: EdgeInsets.only(left: 50.0, right: 50.0),
-                      onPressed: () async {
-                        await Item.insertItem(Item(
-                          name: nameController.text,
-                          cost: int.parse(priceController.text),
-                        ));
-                      },
+                      onPressed: () { saveToDB(); nameController.clear(); priceController.clear(); },
                       child: Text(
                         'SAVE',
                         style: TextStyle(
