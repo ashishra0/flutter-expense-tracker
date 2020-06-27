@@ -14,6 +14,7 @@ class _GetItemsState extends State<GetItems> {
   Map data;
   List itemData;
   var icon = Icons.refresh;
+  List itemList;
 
   convertToAmount(int cost) {
     return new FlutterMoneyFormatter(
@@ -28,14 +29,9 @@ class _GetItemsState extends State<GetItems> {
     return DateFormat.yMMMMd("en_US").format(myDate);
   }
 
-  getItemFromDb() async {
-    itemData = await Item.queryAll();
-  }
-
   @override
   void initState() {
     super.initState();
-    getItemFromDb();
   }
 
   Widget build(BuildContext context) {
@@ -67,7 +63,7 @@ class _GetItemsState extends State<GetItems> {
               icon: Icon(icon),
               color: Colors.black87,
               onPressed: () {
-                getItemFromDb();
+                print('TODO');
               },
             ),
           ],
@@ -78,42 +74,55 @@ class _GetItemsState extends State<GetItems> {
           ),
         ),
         body: SafeArea(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 10.0),
-            itemCount: itemData == null ? 0 : itemData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Center(
-                child: Card(
-                  margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Text(
-                          "${itemData[index]['name']}",
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 5.0),
-                        Text(
-                          "#${itemData[index]['item_id']}",
-                          style: TextStyle(fontSize: 13.0, color: Colors.grey),
-                        ),
-                        SizedBox(height: 5.0),
-                        Text(
-                          "${convertToAmount(itemData[index]['cost'])}",
-                          style: TextStyle(fontSize: 15.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+          child: FutureBuilder(
+            future: Item.queryAll(),
+            // ignore: missing_return
+            builder: (context, snapshot){
+              new CircularProgressIndicator();
+              itemData = snapshot.data;
+               if(itemData.length != 0) {
+                 print(itemData.length);
+                 return ListView.builder(
+                   padding: const EdgeInsets.only(top: 10.0),
+                   itemCount: itemData == null ? 0 : itemData.length,
+                   itemBuilder: (BuildContext context, int index) {
+                     return Center(
+                       child: Card(
+                         margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                         child: Padding(
+                           padding: const EdgeInsets.all(12.0),
+                           child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.stretch,
+                             children: <Widget>[
+                               Text(
+                                 "${itemData[index]['name']}",
+                                 style: TextStyle(
+                                   fontSize: 22.0,
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                               ),
+                               SizedBox(height: 5.0),
+                               Text(
+                                 "#${itemData[index]['id']}",
+                                 style: TextStyle(fontSize: 13.0, color: Colors.grey),
+                               ),
+                               SizedBox(height: 5.0),
+                               Text(
+                                 "${convertToAmount(itemData[index]['cost'])}",
+                                 style: TextStyle(fontSize: 15.0),
+                               ),
+                             ],
+                           ),
+                         ),
+                       ),
+                     );
+                   },
+                 );
+               } else if (itemData.length == 0) {
+                 return Center(child: new Text('Nothing to keep track off 🤷🏻‍♂️', style: TextStyle(fontSize: 30.0),));
+               }
             },
-          ),
+          )
         ),
       ),
     );
