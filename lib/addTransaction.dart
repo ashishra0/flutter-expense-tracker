@@ -1,5 +1,5 @@
+import 'package:alfredexpensetracker/item.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -10,18 +10,24 @@ class AddTransaction extends StatefulWidget {
 
 class _AddTransactionState extends State<AddTransaction> {
   ProgressDialog progressDialog;
-  var url = 'https://bifrost-beta.herokuapp.com/v1/expense/create';
   var response;
   String itemName;
   int itemCost;
-  final nameController = TextEditingController();
-  final priceController = TextEditingController();
-  Map<String, String> headers = {"Content-type": "application/json"};
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController priceController = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var error;
 
+  saveToDB() async {
+    var result = await Item.insertItem(Item(
+      name: nameController.text,
+      cost: int.parse(priceController.text),
+    ));
+    displayAlert(result);
+  }
+
   displayAlert(value) {
-    if (value == "200") {
+    if (value != 0) {
       Alert(
         context: context,
         type: AlertType.success,
@@ -38,7 +44,7 @@ class _AddTransactionState extends State<AddTransaction> {
           )
         ],
       ).show();
-    } else if (value == "400") {
+    } else {
       Alert(
         context: context,
         type: AlertType.error,
@@ -57,18 +63,6 @@ class _AddTransactionState extends State<AddTransaction> {
         ],
       ).show();
     }
-  }
-
-  _sendData(name, cost) async {
-    try {
-      response = await http.post(url,
-          body: '{"item_name": "$name", "item_cost": $cost}', headers: headers);
-      displayAlert("200");
-    } catch (err) {
-      error = err;
-      displayAlert("400");
-    }
-    _formKey.currentState.reset();
   }
 
   @override
@@ -134,8 +128,8 @@ class _AddTransactionState extends State<AddTransaction> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(top: 10.0, left: 40.0, right: 40.0),
+                    padding: const EdgeInsets.only(
+                        top: 10.0, left: 40.0, right: 40.0),
                     child: TextFormField(
                       controller: priceController,
                       keyboardType: TextInputType.number,
@@ -153,9 +147,7 @@ class _AddTransactionState extends State<AddTransaction> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       padding: EdgeInsets.only(left: 50.0, right: 50.0),
-                      onPressed: () {
-                        _sendData(nameController.text, priceController.text);
-                      },
+                      onPressed: () { saveToDB(); nameController.clear(); priceController.clear(); },
                       child: Text(
                         'SAVE',
                         style: TextStyle(

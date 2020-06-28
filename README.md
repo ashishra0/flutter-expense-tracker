@@ -5,4 +5,5 @@
 # Daily Expense Tracker
 
 ---
-### Powered by [Bifrost](https://github.com/ashishra0/bifrost)
+
+An App that lets you keep track of daily expenses as they incur.

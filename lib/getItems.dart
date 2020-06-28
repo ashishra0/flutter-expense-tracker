@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:async';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'error.dart';
-
+import 'package:alfredexpensetracker/item.dart';
 
 class GetItems extends StatefulWidget {
   @override
@@ -18,31 +14,7 @@ class _GetItemsState extends State<GetItems> {
   Map data;
   List itemData;
   var icon = Icons.refresh;
-
-  Future getItems() async {
-    try {
-      var response = await http.get('https://bifrost-beta.herokuapp.com/v1/expense');
-      data = json.decode(response.body);
-      setState(() {
-        itemData = data['data']['Expense'];
-      });
-      progressDialog.update(
-        message: 'List updated!',
-        messageTextStyle: TextStyle(
-          fontSize: 20.0,
-        ),
-      );
-    } catch (err) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ErrorPage(),
-        ),
-      );
-    }
-    await progressDialog.show();
-    await progressDialog.hide();
-  }
+  List itemList;
 
   convertToAmount(int cost) {
     return new FlutterMoneyFormatter(
@@ -60,7 +32,6 @@ class _GetItemsState extends State<GetItems> {
   @override
   void initState() {
     super.initState();
-    getItems();
   }
 
   Widget build(BuildContext context) {
@@ -92,7 +63,7 @@ class _GetItemsState extends State<GetItems> {
               icon: Icon(icon),
               color: Colors.black87,
               onPressed: () {
-                getItems();
+                print('TODO');
               },
             ),
           ],
@@ -103,61 +74,57 @@ class _GetItemsState extends State<GetItems> {
           ),
         ),
         body: SafeArea(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 10.0),
-            itemCount: itemData == null ? 0 : itemData.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Center(
-                child: Card(
-                  margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Text(
-                          "${itemData[index]['item_name']}",
-                          style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 5.0),
-                        Text(
-                          "#${itemData[index]['item_id']}",
-                          style: TextStyle(fontSize: 13.0, color: Colors.grey),
-                        ),
-                        SizedBox(height: 5.0),
-                        Text(
-                          "${convertToAmount(itemData[index]['item_cost'])} • ${parseDate(itemData[index]['date'])}",
-                          style: TextStyle(fontSize: 15.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+          child: FutureBuilder(
+            future: Item.queryAll(),
+            // ignore: missing_return
+            builder: (context, snapshot){
+              new CircularProgressIndicator();
+              itemData = snapshot.data;
+               if(itemData.length != 0) {
+                 print(itemData.length);
+                 return ListView.builder(
+                   padding: const EdgeInsets.only(top: 10.0),
+                   itemCount: itemData == null ? 0 : itemData.length,
+                   itemBuilder: (BuildContext context, int index) {
+                     return Center(
+                       child: Card(
+                         margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                         child: Padding(
+                           padding: const EdgeInsets.all(12.0),
+                           child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.stretch,
+                             children: <Widget>[
+                               Text(
+                                 "${itemData[index]['name']}",
+                                 style: TextStyle(
+                                   fontSize: 22.0,
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                               ),
+                               SizedBox(height: 5.0),
+                               Text(
+                                 "#${itemData[index]['id']}",
+                                 style: TextStyle(fontSize: 13.0, color: Colors.grey),
+                               ),
+                               SizedBox(height: 5.0),
+                               Text(
+                                 "${convertToAmount(itemData[index]['cost'])}",
+                                 style: TextStyle(fontSize: 15.0),
+                               ),
+                             ],
+                           ),
+                         ),
+                       ),
+                     );
+                   },
+                 );
+               } else if (itemData.length == 0) {
+                 return Center(child: new Text('Nothing to keep track off 🤷🏻‍♂️', style: TextStyle(fontSize: 30.0),));
+               }
             },
-          ),
+          )
         ),
       ),
     );
-  }
-}
-
-class Item {
-  final int item_id;
-  final String item_name;
-  final int item_cost;
-  final String date;
-
-  Item({this.item_id, this.item_name, this.item_cost, this.date});
-
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
-        item_id: json['item_id'],
-        item_name: json['item_name'],
-        item_cost: json['item_cost'],
-        date: json['date']);
   }
 }
